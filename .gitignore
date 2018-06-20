@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+EarthCare.Rproj
+data/*
+results/*
+
+
+!data/geodata/.gitkeep 
