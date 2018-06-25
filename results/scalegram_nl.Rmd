@@ -1,0 +1,195 @@
+---
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = T, cache = T, warning = F)
+```
+
+# Scalegram 
+
+## Applications in time & space
+
+### Introduction
+
+This is a presentation of the scalegram methodology, applied for the comparison of different data sets. Here, we apply the methodology over Netherlands for observational and model simulation data products from various sources, i.e., the satellite GPM IMERGHH data product, KNMI station and radar data sets, as well as, CNRM simulation and NCEP/NCAR reanalysis. Two examples are given, one in temporal and one in spatial domain. In the first case, the aggregation curve for each data set are estimated over Netherlands and then plotted together. In the second application, the two-dimensional aggregation curves of 6 similar, in terms of mean, precipitation events are compared. 
+
+***
+
+### Functions
+
+The scalegram package can be downloaded from github with package devtools:
+
+```{r, eval = F}
+devtools::install_git("https://github.com/imarkonis/scalegram")
+```
+
+**scalegram** Computes (and by default plots) the aggregation curve of a given statistic in a single dimension, e.g., time. The statistics, that can be estimated across the cross-scale continuum, are: variance ("var"; default), standard deviation ("sd"), skewness ("skew"), kurtosis ("kurt"), L-scale ("l2"), coefficient of L-variation ("t2"), L-skewness ("t3"), L-kurtosis ("t4").
+
+**scalegram_space** As above but in two dimensions, i.e., space. Input variable is in brick format (raster), while output is in tidy format (data.table), with each layer of the initial brick coresponding to a different variable number. This allows for further extending scalegram to both space and time.
+
+**scalegram_plot** Plots a data.table in the scalegram format (one column for scale number and one for statistic value). If _wn_ argument is true, then the aggregation curve of white noise process is also plotted. 
+
+**scalegram_multiplot** As above for a group of scalegrams. In the input data.table, a column describing the data set is added, while the argument _smooth_ allows for loess smoothing of the aggregation curves. If there are more than 10 lines then no legend is ploted and the lines are transparent.
+
+**scalegram_rescale** Auxiliary function for matching and comparing scalegrams estimated at different scales.
+
+**dt_to_brick** Auxiliary function for transforming data table objects to brick format, for integration in scalegram_space function.
+
+More can be found at the help file of each function.
+
+***
+
+### Data
+
+```{r data, echo = F}
+load("../data/nl_prcp_obs_raw.rdata") 
+load("../data/nl_prcp_mod_raw.rdata") 
+```
+
+**Satellite data (GPM)**
+  
+* Dataset: GPM IMERG Final Precipitation 
+* Temporal Resolution: 24 hours
+* Spatial Resolution: 0.1 x 0.1 deg
+* Date Range: `r min(gpm_prcp$time)` to `r max(gpm_prcp$time)` 
+* Spatial Region: latitude: `r range(gpm_cells$lat)`, longitude: `r range(gpm_cells$lon)`
+* Format: netCDF 4
+* Variables: gpm_cells (coordinates) & gpm_prcp (values) in _nl_prcp_obs_raw.Rdata_
+* IDs: `r min(gpm_cells$id)`
+* Size: `r nrow(gpm_prcp)` total values, multiplied by `r nrow(gpm_cells)` grid cells
+* Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=imerg_daily 
+
+**Station data (KNMI)**
+  
+* Dataset: 240 homogenised stations 1951-now
+* Temporal Resolution: 24 hours
+* Spatial Resolution: -
+* Date Range: `r min(knmi_prcp$time)` to `r max(knmi_prcp$time)` 
+* Spatial Region: latitude: `r range(knmi_stations$lat)`, longitude: `r range(knmi_stations$lon)`
+* Format: Text file
+* Variables: knmi_stations (coordinates) & knmi_prcp (values) in _nl_prcp_obs_raw.Rdata_
+* IDs: `r min(knmi_stations$id)`
+* Size: `r nrow(knmi_prcp)` total values, multiplied by `r nrow(knmi_stations)` stations
+* Downloaded from: https://climexp.knmi.nl/PhomNL.cgi?id=312456c83e660703df1bfea9ba4fba50
+
+**Radar data (KNMI)**
+  
+* Dataset: RAD_NL25_RAC_MFBS_24H_NC
+* Temporal Resolution: 24 hours
+* Spatial Resolution: 1 x 1 km
+* Date Range: `r min(rdr_prcp$time)` to `r max(rdr_prcp$time)` 
+* Spatial Region: latitude: `r range(rdr_cells$lat)`, longitude: `r range(rdr_cells$lon)`
+* Format: netCDF 4
+* Variables: rdr_cells (coordinates) & rdr_prcp (values) in _nl_prcp_obs_raw.Rdata_
+* IDs: `r min(rdr_cells$id)`
+* Size: `r nrow(rdr_prcp)` total values, multiplied by `r nrow(rdr_cells)` grid cells
+* Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=knmi_radar_daily
+
+  **Reanalysis data (NCEP/NCAR)**
+  
+* Dataset: NMC reanalysis 
+* Temporal Resolution: 24 hours
+* Spatial Resolution: 2.5 x 2.5 deg 
+* Date Range: `r min(ncep_prcp$time)` to `r max(ncep_prcp$time)` 
+* Spatial Region: 1 grid cell at 52.38N & 5.625E 
+* Format: netCDF 4
+* Variables: ncep_prcp (values) in _nl_prcp_mod_raw.Rdata_
+* Size: `r nrow(ncep_prcp)` total values in 1 grid cell
+* Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=nprate_daily
+
+**Simulation data (CNRM)**
+  
+* Dataset: cnrm cm3 20c3m pr
+* Temporal Resolution: 24 hours
+* Spatial Resolution: 2.8 x 2.8 deg 
+* Date Range: `r min(cnrm_prcp$time)` to `r max(cnrm_prcp$time)` 
+* Spatial Region: 1 grid cell at 51.625N & 5.625E 
+* Format: netCDF 4
+* Variables: cnrm_prcp (values) in _nl_prcp_mod_raw.Rdata_
+* Size: `r nrow(cnrm_prcp)` total values in 1 grid cell
+* Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=pr_A2_cnrm_cm3_20c3m
+
+***
+  
+### Code structure
+
+This example consists of four R scripts. These are:
+
+**data_import.R** Imports observed and modeled data for the Netherlands. Observational data are composed of two data tables, one for values and one for cell/station coordinates and then saved in _nl_prcp_obs_raw.Rdata_. Model simulation data represent a single grid cell (coarser resolution) and thus a single data table is stored in _nl_prcp_mod_raw.Rdata_.
+
+**data_prep.R** Prepares datasets for comparison. This script reads the files prepared in _data_import.R_ and makes the necessary changes for the application of scalegram in time and space. For the temporal domain, all observational datasets are aggregated (average) over the Netherlands and then saved in _nl_prcp_temp_agg.Rdata_. For the spatial domain, 6 precipitation events (daily) with mean precipitation between 10 and 11 mm, are randomly picked and then stored in _nl_prcp_sp_agg.Rdata_. 
+
+**temporal_agg.R** A demonstration of scalegram function in temporal domain for variance, as well as scalegram_multiplot for the 5 datasets.
+
+**spatial_agg.R** Same as above, but for GPM dataset in spatial domain.
+
+```{r libraries & data, include = F}
+library(data.table); library(reshape2); library(scalegram); library(raster)
+
+load("../data/nl_prcp_temp_agg.Rdata")  
+load("../data/nl_prcp_sp_agg.Rdata")
+```
+
+***
+
+### Results
+
+#### Temporal Aggregation
+
+To estimate and plot the aggregation curve of variance (function default), the _scalegram_ function is used with a time series in vector format as input: 
+
+```{r scalegram_1, eval = F}
+scalegram(gpm_prcp_nl$prcp)
+```
+
+```{r scalegram_2, fig.width = 4, fig.height = 3, echo = F, fig.align = 'center'}
+res <- scalegram(gpm_prcp_nl$prcp)$plot
+```
+
+To compare the aggregation curves of different data sets, the _scalegram_multiplot_ function can be applied. Below three different utilizations of the function are presented (file _temporal_agg.R_). In the first case, the common arguments for the scalegram are used, while in the second only the logarithmic scales are used (argument _fast = T_), which could be handy if speeding up the calculations is needed. The third plot, uses the scalegram_multiplot argument _smooth_ to produce a loess smoothed line for each aggregation curve, as well as the _wn_ argument to compare with the white noise process.
+
+```{r temporal_agg, fig.width = 4, fig.height = 3, fig.align = 'center'}
+set_1 <- data.frame(scalegram(gpm_prcp_nl$prcp, plot = F), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_prcp_nl$prcp, plot = F), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_prcp_nl$prcp, plot = F), dataset = "station")
+set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F), dataset = "ncep")
+set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F), dataset = "cnrm")
+
+g1 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
+
+set_1 <- data.frame(scalegram(gpm_prcp_nl$prcp, plot = F, fast = T), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_prcp_nl$prcp, plot = F, fast = T), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_prcp_nl$prcp, plot = F, fast = T), dataset = "station")
+set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F, fast = T), dataset = "ncep")
+set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F, fast = T), dataset = "cnrm")
+
+g2 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
+
+g3 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5), smooth = T, wn = T)
+```
+
+***
+
+#### Spatial Aggregation
+
+For the application in the spatial domain, six daily precipitation events that share average precipitation over the Netherlands (between 10 and 11 mm) are selected:
+
+```{r spatial_agg_1, fig.align = 'center'}
+event_dates <- format(gpm_prcp_events[, unique(time)], "%d-%m-%Y") 
+
+gpm_prcp_events_brick <- dt_to_brick(gpm_prcp_events, var_name = "prcp")
+plot(gpm_prcp_events_brick, col = rev(colorspace::sequential_hcl(40)),
+     main = event_dates)
+```
+
+The application of _scalegram_space_ is quite similar to _scalegram_: 
+
+```{r spatial_agg_2, fig.align = 'center'}
+gpm_sp_scale <- scalegram_space(gpm_prcp_events_brick, thres = 10)
+gpm_sp_scale[, variable := factor(variable, labels = event_dates)]
+scalegram_multiplot(gpm_sp_scale, smooth = T, log_x = F, log_y = F) 
+```
+
+Here, we see how the variance in space changes as the scale groes coarser (to a threshold of 10 grid cells as a final scale).
+

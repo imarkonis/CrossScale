@@ -6,5 +6,5 @@ EarthCare.Rproj
 data/*
 results/*
 
-
+!results/scalegram_nl.Rmd
 !data/geodata/.gitkeep 
