@@ -18,6 +18,6 @@ save(knmi_nl, rdr_nl, gpm_nl, ncep_nl, cnrm_nl,
 
 # Spatial aggregation: pick 6 events between 10 and 11 average prcp
 gpm_prcp[, day_mean := mean(prcp), time]
-gpm_prcp_events <- merge(gpm_prcp[day_mean > 10.3 & day_mean < 11], gpm_cells) 
+gpm_events <- merge(gpm_prcp[day_mean > 10.3 & day_mean < 11], gpm_cells) 
 
-save(gpm_prcp_events, file = "./data/spatial.Rdata")
+save(gpm_events, file = "./data/spatial.Rdata")
