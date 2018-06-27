@@ -188,7 +188,6 @@ For the application in the spatial domain, six daily precipitation events that s
 
 ```{r spatial_agg_1, fig.align = 'center'}
 event_dates <- format(gpm_events[, unique(time)], "%d-%m-%Y") 
-
 gpm_events_brick <- dt_to_brick(gpm_events, var_name = "prcp")
 plot(gpm_events_brick, col = rev(colorspace::sequential_hcl(40)),
      main = event_dates)
@@ -202,5 +201,5 @@ gpm_sp_scale[, variable := factor(variable, labels = event_dates)]
 scalegram_multiplot(gpm_sp_scale, smooth = T, log_x = F, log_y = F) 
 ```
 
-Here, we see how the variance in space changes as the scale groes coarser (to a threshold of 10 grid cells as a final scale).
+Here, we see how the variance in space changes as the scale gets coarser (to a threshold of 10 grid cells as a final scale).
 
