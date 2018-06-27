@@ -180,6 +180,31 @@ g2 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
 g3 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5), smooth = T, wn = T)
 ```
 
+We can also use the _scalegram_multiplot_ to represent the variance ratio between one dataset (here knmi stations) with the others. 
+
+```{r scaling comparison, fig.width = 4, fig.height = 3, fig.align = 'center'}
+set_1_comp <- set_3[set_3$scale %in% set_1$scale, ]
+set_1_comp$dataset <- set_1$dataset
+set_1_comp$var <- set_1_comp$var/set_1$var
+
+set_2_comp <- set_3[set_3$scale %in% set_2$scale, ]
+set_2_comp$dataset <- set_2$dataset
+set_2_comp$var  <- set_2_comp$var/set_2$var
+
+set_4_comp <- set_3[set_3$scale %in% set_4$scale, ]
+set_4_comp$dataset <- set_4$dataset
+set_4_comp$var <- set_4_comp$var/set_4$var
+
+set_5_comp <- set_3[set_3$scale %in% set_5$scale, ]
+set_5_comp$dataset <- set_5$dataset
+set_5_comp$var <- set_5_comp$var/set_5$var
+
+set_comp <- rbind(set_1_comp, set_2_comp, set_4_comp, set_5_comp)
+scalegram_multiplot(set_comp, log_x = T, log_y = F)
+```
+
+We can see that the model results are closer to station until the 10-day scale and then begin to overestimate the variability, whereas the opposite behaviour is observed from scale 2, in the remote sensing data (satellite and radar).
+
 ***
 
 #### Spatial Aggregation
