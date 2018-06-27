@@ -1,27 +1,27 @@
 library(scalegram); library(ggpubr)
 
-load("./data/nl_prcp_temp_agg.Rdata")  #Created in data_prep
+load("./data/temporal.Rdata")  #Created in data_prep
 
 #Put all sets together to use multiplot for 3 examples
-set_1 <- data.frame(scalegram(gpm_prcp_nl$V1, plot = F), dataset = "gpm")
-set_2 <- data.frame(scalegram(rdr_prcp_nl$V1, plot = F), dataset = "radar")
-set_3 <- data.frame(scalegram(knmi_prcp_nl$V1, plot = F), dataset = "station")
+set_1 <- data.frame(scalegram(gpm_nl$V1, plot = F), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_nl$V1, plot = F), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_nl$V1, plot = F), dataset = "station")
 set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F), dataset = "ncep")
 set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F), dataset = "cnrm")
 
 g1 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
 
-set_1 <- data.frame(scalegram(gpm_prcp_nl$V1, plot = F, fast = T), dataset = "gpm")
-set_2 <- data.frame(scalegram(rdr_prcp_nl$V1, plot = F, fast = T), dataset = "radar")
-set_3 <- data.frame(scalegram(knmi_prcp_nl$V1, plot = F, fast = T), dataset = "station")
+set_1 <- data.frame(scalegram(gpm_nl$V1, plot = F, fast = T), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_nl$V1, plot = F, fast = T), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_nl$V1, plot = F, fast = T), dataset = "station")
 set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F, fast = T), dataset = "ncep")
 set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F, fast = T), dataset = "cnrm")
 
 g2 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
 
-set_1 <- data.frame(scalegram(gpm_prcp_nl$V1, plot = F, fast = T), dataset = "gpm")
-set_2 <- data.frame(scalegram(rdr_prcp_nl$V1, plot = F, fast = T), dataset = "radar")
-set_3 <- data.frame(scalegram(knmi_prcp_nl$V1, plot = F, fast = T), dataset = "station")
+set_1 <- data.frame(scalegram(gpm_nl$V1, plot = F, fast = T), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_nl$V1, plot = F, fast = T), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_nl$V1, plot = F, fast = T), dataset = "station")
 set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F, fast = T), dataset = "ncep")
 set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F, fast = T), dataset = "cnrm")
 

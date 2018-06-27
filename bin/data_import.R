@@ -1,5 +1,3 @@
-# Import and prepare station, radar and satellite data for netherlands. Each pair 
-# of data (values and coordinates) is saved to experiment_3.rdata.
 library(data.table)
 source("./source/paths.R") 
 
@@ -33,7 +31,7 @@ rdr_prcp <- rdr_prcp[, c(5, 3:4)]
 
 rm(rdr); gc()
 
-#### Stations - downloaded from https://climexp.knmi.nl/getdutchstations.cgi?id=312456c83e660703df1bfea9ba4fba50&TYPE=preciphom1951
+#### Stations 
 knmi <- data.table(read.delim(paste0(data_knmi_stations_path, "/precip_hom1951_NL.txt"), header = T, sep = ""))
 knmi_dates <- data.table(read.delim(paste0(data_knmi_stations_path, "/precip_hom1951_NL.txt"), header = T, sep = " "))
 knmi_dates <- knmi_dates[, 1]
@@ -61,7 +59,7 @@ rm(knmi); gc()
 knmi_stations <- put_stations_to_cells(knmi_stations, gpm_cells) 
 rdr_cells <- put_stations_to_cells(rdr_cells, gpm_cells) 
 
-save(knmi_stations, knmi_prcp, gpm_cells, gpm_prcp, rdr_cells, rdr_prcp, file = "./data/nl_prcp_obs_raw.rdata")
+save(knmi_stations, knmi_prcp, gpm_cells, gpm_prcp, rdr_cells, rdr_prcp, file = "./data/observ_raw.rdata")
 
 #### Reanalysis
 ncep_nc_file <- paste0(data_ncep_path, "/prate.sfc.gauss.daily_3.4-7.2E_50.7-53.6N_su.nc")
@@ -71,7 +69,7 @@ ncep <- data.table(time = ncep_nc$dim$time$vals + as.Date("1948-01-01"), #One si
                    prcp = ncep[2,]) 
 
 kk = ncdf4::nc_close(ncep_nc)
-ncep_prcp <- ncep[complete.cases(ncep)]
+ncep_nl <- ncep[complete.cases(ncep)]
 
 rm(ncep); gc()
 
@@ -83,8 +81,8 @@ cnrm <- data.table(time = cnrm_nc$dim$time$vals + as.Date("1961-01-01"), #One si
                    prcp = cnrm) 
 
 kk = ncdf4::nc_close(cnrm_nc)
-cnrm_prcp <- cnrm[complete.cases(cnrm)]
+cnrm_nl <- cnrm[complete.cases(cnrm)]
 
 rm(cnrm); gc()
-save(ncep_prcp, cnrm_prcp, file = "./data/nl_prcp_mod_raw.rdata")
+save(ncep_prcp, cnrm_prcp, file = "./data/model_raw.rdata")
 

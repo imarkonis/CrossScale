@@ -43,8 +43,8 @@ More can be found at the help file of each function.
 ### Data
 
 ```{r data, echo = F}
-load("../data/nl_prcp_obs_raw.rdata") 
-load("../data/nl_prcp_mod_raw.rdata") 
+load("../data/observ_raw.rdata") 
+load("../data/model_raw.rdata") 
 ```
 
 **Satellite data (GPM)**
@@ -55,7 +55,7 @@ load("../data/nl_prcp_mod_raw.rdata")
 * Date Range: `r min(gpm_prcp$time)` to `r max(gpm_prcp$time)` 
 * Spatial Region: latitude: `r range(gpm_cells$lat)`, longitude: `r range(gpm_cells$lon)`
 * Format: netCDF 4
-* Variables: gpm_cells (coordinates) & gpm_prcp (values) in _nl_prcp_obs_raw.Rdata_
+* Variables: gpm_cells (coordinates) & gpm_prcp (values) in _observ_raw.Rdata_
 * IDs: `r min(gpm_cells$id)`
 * Size: `r nrow(gpm_prcp)` total values, multiplied by `r nrow(gpm_cells)` grid cells
 * Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=imerg_daily 
@@ -68,7 +68,7 @@ load("../data/nl_prcp_mod_raw.rdata")
 * Date Range: `r min(knmi_prcp$time)` to `r max(knmi_prcp$time)` 
 * Spatial Region: latitude: `r range(knmi_stations$lat)`, longitude: `r range(knmi_stations$lon)`
 * Format: Text file
-* Variables: knmi_stations (coordinates) & knmi_prcp (values) in _nl_prcp_obs_raw.Rdata_
+* Variables: knmi_stations (coordinates) & knmi_prcp (values) in _observ_raw.Rdata_
 * IDs: `r min(knmi_stations$id)`
 * Size: `r nrow(knmi_prcp)` total values, multiplied by `r nrow(knmi_stations)` stations
 * Downloaded from: https://climexp.knmi.nl/PhomNL.cgi?id=312456c83e660703df1bfea9ba4fba50
@@ -81,7 +81,7 @@ load("../data/nl_prcp_mod_raw.rdata")
 * Date Range: `r min(rdr_prcp$time)` to `r max(rdr_prcp$time)` 
 * Spatial Region: latitude: `r range(rdr_cells$lat)`, longitude: `r range(rdr_cells$lon)`
 * Format: netCDF 4
-* Variables: rdr_cells (coordinates) & rdr_prcp (values) in _nl_prcp_obs_raw.Rdata_
+* Variables: rdr_cells (coordinates) & rdr_prcp (values) in _observ_raw.Rdata_
 * IDs: `r min(rdr_cells$id)`
 * Size: `r nrow(rdr_prcp)` total values, multiplied by `r nrow(rdr_cells)` grid cells
 * Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=knmi_radar_daily
@@ -94,7 +94,7 @@ load("../data/nl_prcp_mod_raw.rdata")
 * Date Range: `r min(ncep_prcp$time)` to `r max(ncep_prcp$time)` 
 * Spatial Region: 1 grid cell at 52.38N & 5.625E 
 * Format: netCDF 4
-* Variables: ncep_prcp (values) in _nl_prcp_mod_raw.Rdata_
+* Variables: ncep_prcp (values) in _model_raw.Rdata_
 * Size: `r nrow(ncep_prcp)` total values in 1 grid cell
 * Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=nprate_daily
 
@@ -106,7 +106,7 @@ load("../data/nl_prcp_mod_raw.rdata")
 * Date Range: `r min(cnrm_prcp$time)` to `r max(cnrm_prcp$time)` 
 * Spatial Region: 1 grid cell at 51.625N & 5.625E 
 * Format: netCDF 4
-* Variables: cnrm_prcp (values) in _nl_prcp_mod_raw.Rdata_
+* Variables: cnrm_prcp (values) in _model_raw.Rdata_
 * Size: `r nrow(cnrm_prcp)` total values in 1 grid cell
 * Downloaded from: https://climexp.knmi.nl/select.cgi?id=312456c83e660703df1bfea9ba4fba50&field=pr_A2_cnrm_cm3_20c3m
 
@@ -116,9 +116,9 @@ load("../data/nl_prcp_mod_raw.rdata")
 
 This example consists of four R scripts. These are:
 
-**data_import.R** Imports observed and modeled data for the Netherlands. Observational data are composed of two data tables, one for values and one for cell/station coordinates and then saved in _nl_prcp_obs_raw.Rdata_. Model simulation data represent a single grid cell (coarser resolution) and thus a single data table is stored in _nl_prcp_mod_raw.Rdata_.
+**data_import.R** Imports observed and modeled data for the Netherlands. Observational data are composed of two data tables, one for values and one for cell/station coordinates and then saved in _observ_raw.Rdata_. Model simulation data represent a single grid cell (coarser resolution) and thus a single data table is stored in _model_raw.Rdata_.
 
-**data_prep.R** Prepares datasets for comparison. This script reads the files prepared in _data_import.R_ and makes the necessary changes for the application of scalegram in time and space. For the temporal domain, all observational datasets are aggregated (average) over the Netherlands and then saved in _nl_prcp_temp_agg.Rdata_. For the spatial domain, 6 precipitation events (daily) with mean precipitation between 10 and 11 mm, are randomly picked and then stored in _nl_prcp_sp_agg.Rdata_. 
+**data_prep.R** Prepares datasets for comparison. This script reads the files prepared in _data_import.R_ and makes the necessary changes for the application of scalegram in time and space. For the temporal domain, all observational datasets are aggregated (average) over the Netherlands and then saved in _temporal.Rdata_. For the spatial domain, 6 precipitation events (daily) with mean precipitation between 10 and 11 mm, are randomly picked and then stored in _spatial.Rdata_. 
 
 **temporal_agg.R** A demonstration of scalegram function in temporal domain for variance, as well as scalegram_multiplot for the 5 datasets.
 
@@ -127,8 +127,8 @@ This example consists of four R scripts. These are:
 ```{r libraries & data, include = F}
 library(data.table); library(reshape2); library(scalegram); library(raster)
 
-load("../data/nl_prcp_temp_agg.Rdata")  
-load("../data/nl_prcp_sp_agg.Rdata")
+load("../data/temporal.Rdata")  
+load("../data/spatial.Rdata")
 ```
 
 ***
@@ -140,29 +140,29 @@ load("../data/nl_prcp_sp_agg.Rdata")
 To estimate and plot the aggregation curve of variance (function default), the _scalegram_ function is used with a time series in vector format as input: 
 
 ```{r scalegram_1, eval = F}
-scalegram(gpm_prcp_nl$prcp)
+scalegram(gpm_nl$prcp)
 ```
 
 ```{r scalegram_2, fig.width = 4, fig.height = 3, echo = F, fig.align = 'center'}
-res <- scalegram(gpm_prcp_nl$prcp)$plot
+res <- scalegram(gpm_nl$prcp)$plot
 ```
 
 To compare the aggregation curves of different data sets, the _scalegram_multiplot_ function can be applied. Below three different utilizations of the function are presented (file _temporal_agg.R_). In the first case, the common arguments for the scalegram are used, while in the second only the logarithmic scales are used (argument _fast = T_), which could be handy if speeding up the calculations is needed. The third plot, uses the scalegram_multiplot argument _smooth_ to produce a loess smoothed line for each aggregation curve, as well as the _wn_ argument to compare with the white noise process.
 
 ```{r temporal_agg, fig.width = 4, fig.height = 3, fig.align = 'center'}
-set_1 <- data.frame(scalegram(gpm_prcp_nl$prcp, plot = F), dataset = "gpm")
-set_2 <- data.frame(scalegram(rdr_prcp_nl$prcp, plot = F), dataset = "radar")
-set_3 <- data.frame(scalegram(knmi_prcp_nl$prcp, plot = F), dataset = "station")
-set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F), dataset = "ncep")
-set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F), dataset = "cnrm")
+set_1 <- data.frame(scalegram(gpm_nl$prcp, plot = F), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_nl$prcp, plot = F), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_nl$prcp, plot = F), dataset = "station")
+set_4 <- data.frame(scalegram(ncep_nl$prcp, plot = F), dataset = "ncep")
+set_5 <- data.frame(scalegram(cnrm_nl$prcp, plot = F), dataset = "cnrm")
 
 g1 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
 
-set_1 <- data.frame(scalegram(gpm_prcp_nl$prcp, plot = F, fast = T), dataset = "gpm")
-set_2 <- data.frame(scalegram(rdr_prcp_nl$prcp, plot = F, fast = T), dataset = "radar")
-set_3 <- data.frame(scalegram(knmi_prcp_nl$prcp, plot = F, fast = T), dataset = "station")
-set_4 <- data.frame(scalegram(ncep_prcp$prcp, plot = F, fast = T), dataset = "ncep")
-set_5 <- data.frame(scalegram(cnrm_prcp$prcp, plot = F, fast = T), dataset = "cnrm")
+set_1 <- data.frame(scalegram(gpm_nl$prcp, plot = F, fast = T), dataset = "gpm")
+set_2 <- data.frame(scalegram(rdr_nl$prcp, plot = F, fast = T), dataset = "radar")
+set_3 <- data.frame(scalegram(knmi_nl$prcp, plot = F, fast = T), dataset = "station")
+set_4 <- data.frame(scalegram(ncep_nl$prcp, plot = F, fast = T), dataset = "ncep")
+set_5 <- data.frame(scalegram(cnrm_nl$prcp, plot = F, fast = T), dataset = "cnrm")
 
 g2 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5))
 
@@ -176,17 +176,17 @@ g3 <- scalegram_multiplot(rbind(set_1, set_2, set_3, set_4, set_5), smooth = T, 
 For the application in the spatial domain, six daily precipitation events that share average precipitation over the Netherlands (between 10 and 11 mm) are selected:
 
 ```{r spatial_agg_1, fig.align = 'center'}
-event_dates <- format(gpm_prcp_events[, unique(time)], "%d-%m-%Y") 
+event_dates <- format(gpm_events[, unique(time)], "%d-%m-%Y") 
 
-gpm_prcp_events_brick <- dt_to_brick(gpm_prcp_events, var_name = "prcp")
-plot(gpm_prcp_events_brick, col = rev(colorspace::sequential_hcl(40)),
+gpm_events_brick <- dt_to_brick(gpm_events, var_name = "prcp")
+plot(gpm_events_brick, col = rev(colorspace::sequential_hcl(40)),
      main = event_dates)
 ```
 
 The application of _scalegram_space_ is quite similar to _scalegram_: 
 
 ```{r spatial_agg_2, fig.align = 'center'}
-gpm_sp_scale <- scalegram_space(gpm_prcp_events_brick, thres = 10)
+gpm_sp_scale <- scalegram_space(gpm_events_brick, thres = 10)
 gpm_sp_scale[, variable := factor(variable, labels = event_dates)]
 scalegram_multiplot(gpm_sp_scale, smooth = T, log_x = F, log_y = F) 
 ```
