@@ -21,7 +21,7 @@ This is a presentation of the scalegram methodology, applied for the comparison 
 The scalegram package can be downloaded from github with package devtools:
 
 ```{r, eval = F}
-devtools::install_git("https://github.com/imarkonis/scalegram")
+devtools::install_github("imarkonis/scalegram")
 ```
 
 **scalegram** Computes (and by default plots) the aggregation curve of a given statistic in a single dimension, e.g., time. The statistics, that can be estimated across the cross-scale continuum, are: variance ("var"; default), standard deviation ("sd"), skewness ("skew"), kurtosis ("kurt"), L-scale ("l2"), coefficient of L-variation ("t2"), L-skewness ("t3"), L-kurtosis ("t4").
@@ -114,22 +114,33 @@ load("../data/model_raw.rdata")
   
 ### Code structure
 
-This example consists of four R scripts. These are:
+The code needed to reproduce the importing and preparation of the datasets provided by the scalegram package consists of two R scripts. These are:
 
-**data_import.R** Imports observed and modeled data for the Netherlands. Observational data are composed of two data tables, one for values and one for cell/station coordinates and then saved in _observ_raw.Rdata_. Model simulation data represent a single grid cell (coarser resolution) and thus a single data table is stored in _model_raw.Rdata_.
+[data_import.R](https://github.com/imarkonis/CrossScale/blob/master/bin/data_import.R) Imports observed and modeled data for the Netherlands. Observational data are composed of two data tables, one for values and one for cell/station coordinates and then saved in _observ_raw.Rdata_. Model simulation data represent a single grid cell (coarser resolution) and thus a single data table is stored in _model_raw.Rdata_.
 
-**data_prep.R** Prepares datasets for comparison. This script reads the files prepared in _data_import.R_ and makes the necessary changes for the application of scalegram in time and space. For the temporal domain, all observational datasets are aggregated (average) over the Netherlands and then saved in _temporal.Rdata_. For the spatial domain, 6 precipitation events (daily) with mean precipitation between 10 and 11 mm, are randomly picked and then stored in _spatial.Rdata_. 
+[data_prep.R](https://github.com/imarkonis/CrossScale/blob/master/bin/data_prep.R) Prepares datasets for comparison. This script reads the files prepared in _data_import.R_ and makes the necessary changes for the application of scalegram in time and space. For the temporal domain, all observational datasets are aggregated (average) over the Netherlands and then saved in _temporal.Rdata_. For the spatial domain, 6 precipitation events (daily) with mean precipitation between 10 and 11 mm, are randomly picked and then stored in _spatial.Rdata_. 
 
-**temporal_agg.R** A demonstration of scalegram function in temporal domain for variance, as well as scalegram_multiplot for the 5 datasets.
+Although, here we will use directly the data from the scalegram package, we have included the links for interested readers and for reproducibility reasons. 
 
-**spatial_agg.R** Same as above, but for GPM dataset in spatial domain.
+```{r data load}
+data(gpm_nl, knmi_nl, rdr_nl, ncep_nl, cnrm_nl, gpm_events)
+```
+
+The libraries needed are:
 
 ```{r libraries & data, include = F}
 library(data.table); library(reshape2); library(scalegram); library(raster)
-
-load("../data/temporal.Rdata")  
-load("../data/spatial.Rdata")
 ```
+
+```{r libraries, eval = F}
+library(data.table); library(reshape2); library(scalegram); library(raster)
+```
+
+The examples presented below can also be found in:
+
+[temporal_agg.R](https://github.com/imarkonis/CrossScale/blob/master/bin/spatial_agg.R) A demonstration of scalegram function in temporal domain for variance, as well as scalegram_multiplot for the 5 datasets.
+
+[spatial_agg.R](https://github.com/imarkonis/CrossScale/blob/master/bin/temporal_agg.R) Same as above, but for GPM dataset in spatial domain.
 
 ***
 
