@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = T, cache = T, warning = F)
 
 ### Introduction
 
-This is a presentation of the scalegram methodology, applied for the comparison of different data sets. Here, we apply the methodology over Netherlands for observational and model simulation data products from various sources, i.e., the satellite GPM IMERGHH data product, KNMI station and radar data sets, as well as, CNRM simulation and NCEP/NCAR reanalysis. Two examples are given, one in temporal and one in spatial domain. In the first case, the aggregation curve for each data set are estimated over Netherlands and then plotted together. In the second application, the two-dimensional aggregation curves of 6 similar, in terms of mean, precipitation events are compared. 
+This is a presentation of the scalegram methodology, applied for the comparison of different data sets. Here, we apply the methodology over Netherlands for observational and model simulation data products from various sources, i.e., the satellite GPM IMERG data product, KNMI station and radar data sets, as well as, CNRM simulation and NCEP/NCAR reanalysis. Two examples are given, one in temporal and one in spatial domain. In the first case, the aggregation curve for each data set are estimated over Netherlands and then plotted together. In the second application, the two-dimensional aggregation curves of 6 similar, in terms of mean, precipitation events are compared. 
 
 ***
 
@@ -120,7 +120,7 @@ The code needed to reproduce the importing and preparation of the datasets provi
 
 [data_prep.R](https://github.com/imarkonis/CrossScale/blob/master/bin/data_prep.R) Prepares datasets for comparison. This script reads the files prepared in _data_import.R_ and makes the necessary changes for the application of scalegram in time and space. For the temporal domain, all observational datasets are aggregated (average) over the Netherlands and then saved in _temporal.Rdata_. For the spatial domain, 6 precipitation events (daily) with mean precipitation between 10 and 11 mm, are randomly picked and then stored in _spatial.Rdata_. 
 
-Although, here we will use directly the data from the scalegram package, we have included the links for interested readers and for reproducibility reasons. 
+Although here, we will use directly the data from the scalegram package, we have included the links for reasons of reproducibility. 
 
 ```{r data load}
 data(gpm_nl, knmi_nl, rdr_nl, ncep_nl, cnrm_nl, gpm_events)
