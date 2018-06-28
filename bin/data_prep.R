@@ -20,4 +20,6 @@ save(knmi_nl, rdr_nl, gpm_nl, ncep_nl, cnrm_nl,
 gpm_prcp[, day_mean := mean(prcp), time]
 gpm_events <- merge(gpm_prcp[day_mean > 10.3 & day_mean < 11], gpm_cells) 
 
-save(gpm_events, file = "./data/spatial.Rdata")
+rdr_events <- merge(rdr_prcp[time %in% unique(gpm_events$time)], rdr_cells) 
+
+save(gpm_events, rdr_events, file = "./data/spatial.Rdata")
