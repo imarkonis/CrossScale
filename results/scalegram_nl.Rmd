@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = T, cache = T, warning = F)
 
 This is a presentation of the CSA methodology, applied for the comparison of different data sets. Here, we apply the methodology over Netherlands for observational and model simulation data products from various sources, i.e., the satellite GPM IMERG data product, KNMI station and radar data sets, as well as, CNRM simulation and NCEP/NCAR reanalysis. Two examples are given, one in temporal and one in spatial domain. In the first case, the aggregation curve for each data set are estimated over Netherlands and then plotted together. In the second application, the two-dimensional aggregation curves of 6 similar, in terms of mean, precipitation events are compared. 
 
+An interactive application about [aggregation](https://markonis.shinyapps.io/shiny_agg/).
 ***
 
 ### Functions
